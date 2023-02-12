@@ -1,0 +1,10 @@
+.form {
+  width: 358px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 650px) {
+  .form {
+    width: 238px;
+ }
+}

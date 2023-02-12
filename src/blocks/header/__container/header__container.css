@@ -1,0 +1,15 @@
+.header__container {
+  display: flex;
+}
+
+@media screen and (max-width: 650px) {
+  .header__container {
+    width: 100%;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgb(84, 84, 84, .7);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: none;
+  }  
+}

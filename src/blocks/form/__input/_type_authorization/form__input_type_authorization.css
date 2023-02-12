@@ -1,0 +1,10 @@
+.form__input_type_authorization {
+  background-color: black;
+  color: rgba(204, 204, 204, 1);
+  border-bottom: 2px solid rgba(204, 204, 204, 1);  
+}
+
+.form__input_type_authorization::-webkit-input-placeholder {
+  color: rgba(204, 204, 204, 1);
+  opacity: 1; 
+}

@@ -1,0 +1,11 @@
+.form__save-button_type_authorization {
+  margin-top: 185px;
+  background-color: #FFFFFF;
+  color: black;
+}
+
+@media screen and (max-width: 650px) {
+  .form__save-button_type_authorization {
+    margin-top: 140px;
+  }  
+}

@@ -1,0 +1,9 @@
+.form__caption-link {
+  text-decoration: none;
+  color: #FFFFFF;
+}
+
+.form__caption-link:hover {
+  opacity: .6;
+  transition: opacity .3s ease;
+}

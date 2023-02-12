@@ -1,0 +1,10 @@
+.form_type_authorization {
+  margin-top: 60px;
+}
+
+@media screen and (max-width: 650px) {
+  .form_type_authorization {
+    width: 260px;
+    margin-top: 40px;
+  }
+}

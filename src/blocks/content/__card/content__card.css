@@ -1,0 +1,6 @@
+.content__card {
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
+  display: grid;
+  grid-template-rows: 282px 79px;
+  position: relative;
+}

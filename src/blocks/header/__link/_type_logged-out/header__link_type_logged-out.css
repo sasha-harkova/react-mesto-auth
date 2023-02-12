@@ -1,0 +1,12 @@
+.header__link_type_logged-out {
+  color: #A9A9A9;
+}
+
+@media screen and (max-width: 650px) {
+  .header__link_type_logged-out {
+    margin-right: 0;
+    margin-bottom: 40px;
+    font-size: 18px;
+    line-height: 22px;
+  }
+}
