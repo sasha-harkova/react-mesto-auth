@@ -6,14 +6,14 @@ function InfoTooltip({ isOpen, onClose, successfulSession }) {
   return (
     <div className={`popup popup_type_info-tooltip ${isOpen && "popup_opened"}`} onClick={isOpen ? ((evt) => evt.target === evt.currentTarget && onClose()) : undefined }>
       <div className="popup__container">
-        <img className="popup__icon" src={successfulSession ? successIcon : errorIcon} />
+        <img className="popup__icon" src={successfulSession ? successIcon : errorIcon} alt={successfulSession ? "Галочка в круге" : "Красный крестик в круге"} />
         <p className="popup__text">{successfulSession ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз."}</p>
         <button
           className="popup__close-button"
           aria-label="Закрыть"
           type="button"
           onClick={onClose} 
-        ></button>
+        />
       </div>
     </div>
   );

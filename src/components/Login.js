@@ -1,21 +1,18 @@
 import React, {useEffect} from "react";
-import { useForm } from "react-hook-form";
+import useFormAndValidation from "../hooks/useFormAndValidation";
 
 function Login({ onLogin, onClosePopup }) {
-
-  const {
-    register,
-    getValues,
-    reset,
-    formState: { errors, isValid },
-  } = useForm({
-    mode: "all",
-  });
-  let values;
+  const { values, handleChange, errors, isValid, resetForm, setIsValid } = useFormAndValidation();  
 
   useEffect(() => {
-    reset()
+    resetForm();
+    setIsValid(false);
+  }, []);
+
+  useEffect(() => {
+    resetForm();
   }, [onClosePopup]);
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -36,21 +33,6 @@ function Login({ onLogin, onClosePopup }) {
         <h2 className="form__title form__title_type_authorization">Вход</h2>
         <fieldset className="form__inputs">
           <input
-            {...register("email", {
-              required: "Поле обязательно к заполнению",
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "Введите верный формат"
-              },
-              minLength: {
-                value: 5,
-                message: "Минимум 5 символов",
-              },
-              maxLength: {
-                value: 40,
-                message: "Максимум 40 символов",
-              },
-            })}
             id="email"
             name="email"
             autoComplete="email"
@@ -59,21 +41,12 @@ function Login({ onLogin, onClosePopup }) {
             }`}
             type="email"
             placeholder="Email"
-            defaultValue=""            
+            required
+            value={values.email || ''}
+            onChange={handleChange}            
           />
-          {errors.email && (<span className="form__error_visible">{errors.email.message}</span>)}
+          {errors.email && (<span className="form__error_visible">{errors.email}</span>)}
           <input
-            {...register("password", {
-              required: "Поле обязательно к заполнению",
-              minLength: {
-                value: 5,
-                message: "Минимум 5 символов",
-              },
-              maxLength: {
-                value: 40,
-                message: "Максимум 40 символов",
-              },
-            })}
             id="password"
             name="password"
             autoComplete="current-password"
@@ -82,13 +55,16 @@ function Login({ onLogin, onClosePopup }) {
             }`}
             type="password"
             placeholder="Пароль"
-            defaultValue=""            
+            minLength='8'
+            maxLength='30'
+            required
+            value={values.password || ''}
+            onChange={handleChange}          
           />
-          {errors.password && (<span className="form__error_visible">{errors.password.message}</span>)}         
+          {errors.password && (<span className="form__error_visible">{errors.password}</span>)}         
         </fieldset>
         <button className={`form__save-button form__save-button_type_authorization ${!isValid && 'form__save-button_disabled'}`} 
           type="submit" 
-          onClick={() => values = getValues()} 
           disabled={!isValid}>Войти</button>
       </form>
     </section>

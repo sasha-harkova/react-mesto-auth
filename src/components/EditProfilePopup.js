@@ -1,23 +1,22 @@
 import PopupWithForm from "./PopupWithForm";
-import { useContext } from "react";
-import { useForm } from "react-hook-form";
+import { useContext, useEffect } from "react";
+import useFormAndValidation from "../hooks/useFormAndValidation";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, button }) {
   const currentUser = useContext(CurrentUserContext);
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-    getValues,
-  } = useForm({
-    mode: "all",
-  });
-  let values;
+  const { values, handleChange, errors, isValid, setValues, setIsValid } = useFormAndValidation();
 
-  function onSubmit() {
+  useEffect(() => {
+    setValues(currentUser);
+    setIsValid(false);
+  }, [currentUser, isOpen])
+
+  function handleSubmit(e){
+    e.preventDefault();
+
     onUpdateUser({
-      name: values.username,
+      name: values.name,
       about: values.about,
     });
   }
@@ -28,52 +27,31 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, button }) {
       title="Редактировать профиль"
       isOpen={isOpen && "popup_opened"}
       onClose={onClose}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       onUpdateUser={onUpdateUser}
       button={button}
       isValid={isValid}
-      onClickSubmit={() => {
-        values = getValues();
-      }}
     >
       <input
-        {...register("username", {
-          required: "Поле обязательно к заполнению",
-          minLength: {
-            value: 2,
-            message: "Минимум 2 символа",
-          },
-          maxLength: {
-            value: 40,
-            message: "Максимум 40 символов",
-          },
-        })}
-        id="username"
-        name="username"
+        id="name"
+        name="name"
         className={`form__input form__input_el_name ${
-          errors.username && "form__input_type_error"
+          errors.name && "form__input_type_error"
         }`}
         type="text"
         placeholder="Введите имя"
-        defaultValue={currentUser.name}
+        minLength='2'
+        maxLength='40'
+        required
+        value={values.name || ''}
+        onChange={handleChange}        
       />
-      {errors.username && (
+      {errors.name && (
         <span className="form__error_visible">
-          {errors.username.message}
+          {errors.name}
         </span>
       )}
       <input
-        {...register("about", {
-          required: "Поле обязательно к заполнению",
-          minLength: {
-            value: 2,
-            message: "Минимум 2 символа",
-          },
-          maxLength: {
-            value: 40,
-            message: "Максимум 200 символов",
-          },
-        })}
         id="about"
         name="about"
         className={`form__input form__input_el_job ${
@@ -81,11 +59,15 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, button }) {
         }`}
         type="text"
         placeholder="Расскажите о себе"
-        defaultValue={currentUser.about}
+        minLength='2'
+        maxLength='200'
+        required
+        value={values.about || ''}
+        onChange={handleChange}
       />
       {errors.about && (
         <span className="form__error_visible">
-          {errors.about.message}
+          {errors.about}
         </span>
       )}
     </PopupWithForm>

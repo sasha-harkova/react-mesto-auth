@@ -1,17 +1,18 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect } from "react";
+import useFormAndValidation from "../hooks/useFormAndValidation";
 import { Link } from "react-router-dom";
 
-function Register({ onRegister }) {
+function Register({ onRegister, onClosePopup }) {
+  const { values, handleChange, errors, isValid, resetForm, setIsValid } = useFormAndValidation();  
 
-  const {
-    register,
-    getValues,
-    formState: { errors, isValid },
-  } = useForm({
-    mode: "all",
-  });
-  let values;
+  useEffect(() => {
+    resetForm();
+    setIsValid(false);
+  }, []);
+
+  useEffect(() => {
+    resetForm();
+  }, [onClosePopup]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -32,21 +33,6 @@ function Register({ onRegister }) {
         <h2 className="form__title form__title_type_authorization">Регистрация</h2>
         <fieldset className="form__inputs">
           <input
-            {...register("email", {
-              required: "Поле обязательно к заполнению",
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "Введите верный формат"
-              },
-              minLength: {
-                value: 5,
-                message: "Минимум 5 символов",
-              },
-              maxLength: {
-                value: 40,
-                message: "Максимум 40 символов",
-              },
-            })}
             id="email"
             name="email"
             autoComplete="email"
@@ -55,21 +41,12 @@ function Register({ onRegister }) {
             }`}
             type="email"
             placeholder="Email"
-            defaultValue=''
+            required
+            value={values.email || ''}
+            onChange={handleChange} 
           />
-          {errors.email && (<span className="form__error_visible">{errors.email.message}</span>)}
+          {errors.email && (<span className="form__error_visible">{errors.email}</span>)}
           <input
-            {...register("password", {
-              required: "Поле обязательно к заполнению",
-              minLength: {
-                value: 5,
-                message: "Минимум 5 символов",
-              },
-              maxLength: {
-                value: 40,
-                message: "Максимум 40 символов",
-              },
-            })}
             id="password"
             name="password"
             autoComplete="current-password"
@@ -78,11 +55,17 @@ function Register({ onRegister }) {
             }`}
             type="password"
             placeholder="Пароль"
-            defaultValue=''
+            minLength='8'
+            maxLength='30'
+            required
+            value={values.password || ''}
+            onChange={handleChange} 
           />
-          {errors.password && (<span className="form__error_visible">{errors.password.message}</span>)}         
+          {errors.password && (<span className="form__error_visible">{errors.password}</span>)}         
         </fieldset>
-        <button className={`form__save-button form__save-button_type_authorization ${!isValid && 'form__save-button_disabled'}`} onClick={() => values = getValues()}  type="submit" disabled={!isValid}>Зарегистрироваться</button>
+        <button className={`form__save-button form__save-button_type_authorization ${!isValid && 'form__save-button_disabled'}`} 
+          type="submit" 
+          disabled={!isValid}>Зарегистрироваться</button>
         <p className="form__caption">Уже зарегистрированы? <Link className="form__caption-link" to="/sign-in">Войти</Link></p>
       </form>
     </section>

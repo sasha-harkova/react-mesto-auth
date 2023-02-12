@@ -1,24 +1,19 @@
 import PopupWithForm from "./PopupWithForm";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import useFormAndValidation from "../hooks/useFormAndValidation";
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, button }) {
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-    reset,
-    getValues
-  } = useForm({
-    mode: "all",
-  });
-  let values;
+  const { values, handleChange, errors, isValid, resetForm, setIsValid } = useFormAndValidation();
+
 
   useEffect(() => {
-    reset()
+    resetForm();
+    setIsValid(false);
   }, [isOpen]);
 
-  function onSubmit() {
+  function handleSubmit(e){
+    e.preventDefault();
+
     onUpdateAvatar({
       avatar: values.avatarlink,
     });
@@ -30,23 +25,12 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, button }) {
       title="Обновить аватар"
       isOpen={isOpen && "popup_opened"}
       onClose={onClose}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       onUpdateAvatar={onUpdateAvatar}
       button={button}
       isValid={isValid}
-      onClickSubmit={() => {
-        values = getValues();
-      }}
     >
       <input 
-      {...register('avatarlink', {
-        required: "Поле обязательно к заполнению",
-        pattern: {
-          value:
-            /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/,
-          message: "Укажите верную ссылку",
-        }
-      })}
         id="avatarlink"
         name="avatarlink"
         className={`form__input form__input_el_avatar ${
@@ -54,12 +38,14 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, button }) {
         }`}
         type="url"
         placeholder="Ссылка на новый аватар"
-        defaultValue=""
+        required
+        value={values.avatarlink || ''}
+        onChange={handleChange} 
         
       />
       {errors.avatarlink && (
-        <span className="form__error_visible" id="username-error">
-          {errors.avatarlink.message}
+        <span className="form__error_visible">
+          {errors.avatarlink}
         </span>
       )}
     </PopupWithForm>

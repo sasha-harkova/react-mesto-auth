@@ -1,24 +1,19 @@
 import PopupWithForm from "./PopupWithForm";
-import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import useFormAndValidation from "../hooks/useFormAndValidation";
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, button }) {
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-    reset,
-    getValues
-  } = useForm({
-    mode: "all",
-  });
-  let values;
+  const { values, handleChange, errors, isValid, resetForm, setIsValid } = useFormAndValidation();
 
   useEffect(() => {
-    reset()
+    resetForm();
+    setIsValid(false);
   }, [isOpen]);
 
-  function onSubmit() {
+
+  function handleSubmit(e){
+    e.preventDefault();
+
     onAddPlace({ 
       name: values.cardname, 
       link: values.cardlink
@@ -33,24 +28,10 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, button }) {
       isOpen={isOpen && "popup_opened"}
       onClose={onClose}
       onAddPlace={onAddPlace}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit}
       isValid={isValid}
-      onClickSubmit={() => {
-        values = getValues();
-      }}
     >
       <input
-        {...register("cardname", {
-          required: "Поле обязательно к заполнению",
-          minLength: {
-            value: 2,
-            message: "Минимум 2 символа",
-          },
-          maxLength: {
-            value: 30,
-            message: "Максимум 30 символов",
-          },
-        })}
         id="cardname"
         name="cardname"
         className={`form__input form__input_el_place-name ${
@@ -58,22 +39,18 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, button }) {
         }`}
         type="text"
         placeholder="Назание"
-        defaultValue=""
+        minLength='2'
+        maxLength='30'
+        required
+        value={values.cardname || ''}
+        onChange={handleChange} 
       />
       {errors.cardname && (
         <span className="form__error_visible">
-          {errors.cardname.message}
+          {errors.cardname}
         </span>
       )}
       <input
-        {...register("cardlink", {
-          required: "Поле обязательно к заполнению",
-          pattern: {
-            value:
-              /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/,
-            message: "Укажите верную ссылку",
-          },
-        })}
         id="cardlink"
         name="cardlink"
         className={`form__input popup__input_el_link ${
@@ -81,11 +58,13 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, button }) {
         }`}
         type="url"
         placeholder="Ссылка на картинку"
-        defaultValue=""
+        required
+        value={values.cardlink || ''}
+        onChange={handleChange} 
       />
       {errors.cardlink && (
         <span className="form__error_visible">
-          {errors.cardlink.message}
+          {errors.cardlink}
         </span>
       )}
     </PopupWithForm>

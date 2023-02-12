@@ -8,61 +8,58 @@ class Api {
     return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status} ${res.statusText}`)
   }
 
+  _request(endPoint, options) {
+    return fetch((`${this._url}/${endPoint}`), options).then(this._checkResponse)
+  }
+
   getUserInfoAndAvatar() {
-    return fetch(`${this._url}/users/me`, {
+    return this._request('users/me', {
       headers: this._headers
     })
-      .then(res => this._checkResponse(res))
   }
 
   setUserInfo({ name, about }) {
-    return fetch(`${this._url}/users/me`, {
+    return this._request('users/me', {
       headers: this._headers,
       method: 'PATCH',
       body: JSON.stringify({ name, about })
     })
-      .then(res => this._checkResponse(res))
   }
 
   getInitialCards() {
-    return fetch(`${this._url}/cards`, {
-      headers: this._headers
+    return this._request('cards', {
+      headers: this._headers,
     })
-      .then(res => this._checkResponse(res))
   }
 
   addNewCard({ name, link }) {
-    return fetch(`${this._url}/cards`, {
+    return this._request('cards', {
       headers: this._headers,
       method: 'POST',
       body: JSON.stringify({ name, link })
     })
-      .then(res => this._checkResponse(res))
   }
 
   deleteCard(id) {
-    return fetch(`${this._url}/cards/${id}`, {
+    return this._request(`cards/${id}`, {
       headers: this._headers,
       method: 'DELETE'
     })
-      .then(res => this._checkResponse(res))
   }
 
   changeLikeCardStatus(id, isLiked) {
-    return fetch(`${this._url}/cards/${id}/likes`, {
+    return this._request(`cards/${id}/likes`, {
       headers: this._headers,
       method: isLiked ? 'DELETE' : 'PUT'
     })
-      .then(res => this._checkResponse(res))    
   }
 
   setAvatar({ avatar }) {
-    return fetch(`${this._url}/users/me/avatar`, {
+    return this._request('users/me/avatar', {
       headers: this._headers,
       method: 'PATCH',
       body: JSON.stringify({ avatar })
     })
-    .then(res => this._checkResponse(res))
   }
 }
 
