@@ -57,7 +57,7 @@ function App() {
       window.addEventListener("keydown", closeByEsc);
 
       return () => {
-        document.removeEventListener('keydown', closeByEsc);
+        window.removeEventListener('keydown', closeByEsc);
       }
     }    
   }, [isOpen]);
